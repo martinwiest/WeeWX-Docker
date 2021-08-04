@@ -5,7 +5,7 @@
 # start rsyslogd, test for a weewx.conf, start weewx
 
 # start rsyslogd
-/usr/sbin/rsyslogd &
+/etc/init.d/rsyslog start
 
 workdir="/home/weewx"
 configdir="$workdir/config"
@@ -36,4 +36,4 @@ sed -i 's+SQLITE_ROOT[ ]=.*+SQLITE_ROOT = %(WEEWX_ROOT)s/config/archive+' "$conf
 cp $workdir/util/init.d/weewx.debian /etc/init.d/weewx
 
 # start weewx
-/home/weewx/bin/weewxd /home/weewx/weewx.conf &
+python3 /home/weewx/bin/weewxd -d -r --config=/home/weewx/weewx.conf
