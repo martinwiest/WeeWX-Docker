@@ -1,8 +1,9 @@
 version: '3.3'
 services: 
   weewx:
-   build: .
-   container_name: weewx2
+   image: "martinwiest/weewx"
+   container_name: weewx
+   restart: always
    ports:
     - "80:80"
    volumes:
