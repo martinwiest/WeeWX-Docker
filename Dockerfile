@@ -9,7 +9,8 @@ RUN apt-get update -y && apt-get install -y  --no-install-recommends \
 	python3-ephem usbutils ftp curl wget busybox-syslogd procps gnupg && \
 	apt-get autoremove && \
 	wget $WSOURCE && tar xzvf $WVERSION.tar.gz --strip-components=1 && \
-	rm -rf /var/lib/apt/lists/* $WVERSION.tar.gz 
+	rm -rf /var/lib/apt/lists/* $WVERSION.tar.gz && \
+	mkdir public_html
 COPY src/5_run.sh  /docker-entrypoint.d
 VOLUME ["/home/weewx/config"]
 EXPOSE 80/tcp
