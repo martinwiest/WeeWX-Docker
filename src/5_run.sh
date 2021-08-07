@@ -28,6 +28,12 @@ else
         logger -p info "Your weewx.conf has been copied to use"
 fi
 
+# Test if plugins or skins are in place in config dir and install them
+addons="$(find $configdir -type f \( -name "*.zip" -o -name "*.tar.gz" \))" 
+for i in $addons ;
+  do python3 $workdir/bin/wee_extension --install="$i";
+done
+
 # Set the path for the sqlite weewx db to the config path
 # This is needed to have a persistant db on the host
 sed -i 's+SQLITE_ROOT[ ]=.*+SQLITE_ROOT = %(WEEWX_ROOT)s/config/archive+' "$config"
@@ -37,11 +43,6 @@ sed -i 's+root   /usr/share/nginx/html;+root   /home/weewx/public_html;+' "$webc
 
 # copy init.d script for weewx
 cp $workdir/util/init.d/weewx.debian /etc/init.d/weewx
-
-# Install plugins when they exist in plugin dir
-for i in $configdir/plugins/*.zip;
-        do python3 $workdir/bin/wee_extension --install="$i"
-done
 
 # Link python
 ln -s /usr/bin/python3.7 /usr/bin/python
