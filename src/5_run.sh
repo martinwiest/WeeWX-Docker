@@ -34,6 +34,22 @@ for i in $addons ;
   do python3 $workdir/bin/wee_extension --install="$i";
 done
 
+# Copy dirs with skinfiles in the weewx skin dir
+skindirs="$(find $configdir/skins -maxdepth 1 -mindepth 1 -type d)"
+cpskins() {
+        for dirs in $skindirs ;
+                do cp -r "$dirs" "$workdir/skins"
+        done
+}
+
+if [ -d "$configdir/skins" ] ;
+then
+        cpskins ;
+        echo "copy your skin dirs";
+else
+        echo "No skins in unpacked dirs found."
+fi
+
 # Set the path for the sqlite weewx db to the config path
 # This is needed to have a persistant db on the host
 sed -i 's+SQLITE_ROOT[ ]=.*+SQLITE_ROOT = %(WEEWX_ROOT)s/config/archive+' "$config"
