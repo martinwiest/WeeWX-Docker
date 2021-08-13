@@ -20,37 +20,73 @@ There are two ways to run the container on a pi after cloning this repository.
  1. Use Docker-Compose to build, start and stop the container (recommended)
  2. Use Docker to build and run the container manually
 
-In both cases you have to edit the config/weewx.conf to your needs.  
- Visit the WeeWX documentation to read about the necassary settings  
+In both cases you have to edit the config/weewx.conf to your needs,
+otherwise WeeWX runs in simulation mode.
+
+Visit the WeeWX documentation to read about the necessary settings  
 [WeeWx Documentation](http://weewx.com/docs.html)
 
-If you don`t edit the config file, WeeWX starts in simulation mode.
+### General
 
-When the container is running, it takes a while until WeeWX generates the first report and html files.  
-Open http://ip-address-of-your-pi in your browser and press refresh after some time
+After starting the container, it takes a while until WeeWX generates the first report and writes the files in the webserver root. 
+
+ * Open http://ip-address-of-your-pi in your browser and press refresh after some time
+ * Watch the logs to see if WeeWX can connect to your weatherstation. 
+
 
 ### With Docker-compose
 
-
-#### First start in foreground to see if things are running:
-```bash
-$ docker-compose up
-```
-Press ctrl+c to stop
-
-
-#### If evereything is working, start in daemon-mode:
+#### Start the container
 
 ```bash
 $ docker-compose up -d
 ```
 
-### Manual build and start
+This will pull the container from [docker hub](https://hub.docker.com/) and run it in the backgound.
+
+#### Watch the WeeWX logs
+
+At the first time running the container, it is helpfull to watch the logs to see if WeeWX can  
+communicate with your weather station or if errors occur.
+
+Show the first 30 lines of the log:
+
+```bash
+$ docker-compose exec weewx head -n 30 /var/log/messages
+```
+Press crtl+c to abort
+
+To follow the log in realtime
+
+```bash
+$ docker-compose exec weewx tail -f /var/log/messages
+```
+Press crtl+c to abort
+
+#### Restart the container 
+
+Restart the container to:
+ * use new settings in config/weewx.conf
+ * use new added skins and plugins (see customation below)
+
+```bash
+$ docker-compose restart
+```
+
+#### Enter the running container
+
+Enter the runnig container for debugging
+
+```bash
+$ docker-compose exec weewx /bin/bash
+```
+
+### With Docker - manual build and start
 
 Build the container:
 
 ```bash
-   docker build -t weewx .
+$ docker build -t weewx .
 ```
 
 #### Run the container
@@ -67,57 +103,70 @@ docker run -d \
 	-v "$PWD/config":"/home/weewx/config" \
 	weewx
 ```
-or simply execute the startweewx.sh
+or simply execute the startweewx.sh script
 
----
-## Tips and Tricks
 
-### Using docker-compose
+#### Watch the WeeWX logs
 
-#### Inspect the container logs
+At the first time running the container, it is helpfull to watch the logs to see if WeeWX can  
+communicate with your weather station or if errors occur.
 
-```bash
-$ docker-compose logs
-```
-
-#### Restart the container after changing settings in the config file config/weewx.conf
+Show the first 30 lines of the log:
 
 ```bash
-$ docker-compose restart
+$ docker exec -it weewx head -n 30 /var/log/messages
+
+Press crtl+c to abort
 ```
-#### Enter the running container
+To follow the log in realtime
 
 ```bash
-$ docker-compose exec weewx /bin/bash
+$ docker exec -it weewx tail -f /var/log/messages
+
+Press crtl+c to abort
 ```
 
-### Using docker
+#### Restart the container
 
-#### Inspect the container logs
+Restart the container to:
+ * use new settings in config/weewx.conf
+ * use new added skins and plugins (see customation below)
 
 ```bash
-$ docker logs weewx
+$ docker restart weewx
 ```
-#### Stopp, remove and start the container again
+
+#### Stop and remove the container
 
 ```bash
 $ docker stop weewx && docker rm weewx
 ```
+---
+### Customation - Use of skins and plugins
 
-Start the container again with the cmd above or the startweewx.sh script
-
-#### Enter the running container
+Plugins and skins can be installed at the container start. Simply create a plugins and  
+a skins dir inside the config directory and put your files there.
 
 ```bash
-$ docker exec -it weewx /bin/bash
+$ mkdir config/{skins,plugins}
 ```
+Skins and plugins can be in zip or tar.gz files (eg. weewx-crt.zip or steelseries-2.7.6.tar.gz)
 
----
+Also you can put your extracted and configured skin there. The startscript in the container will
+look for directorys inside config/skins and copy them to the weewx skin directory 
+
+I use the [neowx-material skin](https://neoground.com/projects/neowx) with my settings this way.
+
+Example:
+
+ 1. Download the skin from the project site
+ 2. Extract the zip file and copy the contained neowx-material directory to the config/skins folder 
+ 3. Edit the skin.conf 
+ 4. Restart the container
+ 
 ### To do:
 
- * Automate install of plugins and skins when they exist in the config directory
- * Use a mysql container as weewx-db 
- * Generate a realtime.txt to use the weather data with the android app pws watcher
+ * Use a mysql container as weewx-db using a mariadb-container with docker-compose
 
 
 
