@@ -15,27 +15,36 @@ webconf="/etc/nginx/conf.d/default.conf"
 
 # Test if preconfigured configfile exists and copy it
 
-DIFF=$(cmp "$config" "$ownconfig")
-if [ "$DIFF" = "" ] && [ -e $ownconfig ];
-then
-        echo "No (edited) configfile found. WeeWx will use the default
-for the demo mode. Edit the weewx.conf in the config folder
-for your needs before starting the container";
-        logger -p info "No weewx.conf found, using default"
+DIFF=$(cmp "$config" "$ownconfig" 2> /dev/null)
+if [ -e $ownconfig ] ;
+        then
+        if [ "$DIFF" = "" ] ;
+        then
+                echo "No edited configfile found. WeeWx will use default file
+        for the demo mode. Edit the weewx.conf in the config folder
+        for your needs before starting the container";
+                logger -p info "No weewx.conf found, using default";
+
+        else
+                echo "Own configfile exits an will be used";
+                cp "$ownconfig" "$workdir";
+                logger -p info "Your weewx.conf has been copied to use"
+        fi
 else
-        echo "Own configfile exits an will be used";
-        cp "$ownconfig" "$workdir";
-        logger -p info "Your weewx.conf has been copied to use"
+        echo "No config file found in the config directory";
+        python3 $workdir/bin/wee_config --reconfigure --driver=weewx.drivers.simulator  --no-prompt;
 fi
 
+
 # Test if plugins or skins are in place in config dir and install them
-addons="$(find $configdir -type f \( -name "*.zip" -o -name "*.tar.gz" \))" 
+addons="$(find $configdir -type f \( -name "*.zip" -o -name "*.tar.gz" \) 2> /dev/null)" 
 for i in $addons ;
   do python3 $workdir/bin/wee_extension --install="$i";
+  echo "Install $1";
 done
 
 # Copy dirs with skinfiles in the weewx skin dir
-skindirs="$(find $configdir/skins -maxdepth 1 -mindepth 1 -type d)"
+skindirs="$(find $configdir/skins -maxdepth 1 -mindepth 1 -type d 2> /dev/null)"
 cpskins() {
         for dirs in $skindirs ;
                 do cp -r "$dirs" "$workdir/skins"
@@ -47,7 +56,7 @@ then
         cpskins ;
         echo "copy your skin dirs";
 else
-        echo "No skins in unpacked dirs found."
+        echo "No unpacked skins found."
 fi
 
 # Set the path for the sqlite weewx db to the config path
