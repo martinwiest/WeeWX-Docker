@@ -6,7 +6,8 @@
 ## About
 
  *  Running WeeWX with a Weatherstation connected per USB
- *  Works on RPI-2/3 and RPI-4 with 64 bit os (branch arm64v8)
+ *  Works on RPI-2/3/4 32bit and RPI-4 with 64 bit,  
+    amd64 and x86 architecture  
  *  Nginx Webserver for showing the reports as website
  *  Uses the SQLite database for saving the weather records
  *  The Database will be written to config/archive/weewx.sdb  
@@ -17,7 +18,7 @@
 
 There are two ways to run the container on a pi after cloning this repository.
 
- 1. Use Docker-Compose to build, start and stop the container (recommended)
+ 1. Use Docker-Compose to download, start and stop the container (recommended, downloads multiarch container)
  2. Use Docker to build and run the container manually
 
 In both cases you have to edit the config/weewx.conf to your needs,
