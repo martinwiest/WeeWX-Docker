@@ -165,24 +165,35 @@ Example:
  3. Edit the skin.conf 
  4. Restart the container
  
+### Add files for extra sensors to the weewx user directory
+At the moment the adding of extra sensors can only be done by editing or placing a 
+definition in a python file in the weewx bin/user directory. If you need to, follow
+this steps:
+
+Create a user directory:
+
+```bash
+$ mkdir config/user
+```
+Put your files to this dir:
+
+```bash
+$ cp yoursensorfile.py config/user
+```
+
+With docker-compose simple restart your service.
+
+When building the container localy: stop, remove and rebuild your container:
+
+```bash 
+$ docker stop weewx && docker rm weewx 
+
+$ docker build -t weewx .
+
+$ ./startweewx.sh
+```
+
 ### To do:
 
  * Use a mysql container as weewx-db using a mariadb-container with docker-compose
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
