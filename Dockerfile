@@ -1,6 +1,6 @@
-FROM arm32v7/nginx
+FROM nginx
 LABEL maintainer="martinwiest"
-ENV WVERSION="weewx-4.5.1" 
+ENV WVERSION="weewx-4.6.2" 
 ENV WSOURCE="http://weewx.com/downloads/$WVERSION.tar.gz"
 WORKDIR /home/weewx
 RUN apt-get update -y && apt-get install -y  --no-install-recommends \
