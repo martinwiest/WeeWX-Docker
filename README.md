@@ -5,13 +5,15 @@
 ---
 ## About
 
- *  Running WeeWX with a Weatherstation connected per USB
+ *  Running WeeWX with a Weatherstation connected per USB or SDR
  *  Works on RPI-2/3/4 32bit and RPI-4 with 64 bit,  
     amd64 and x86 architecture  
  *  Nginx Webserver for showing the reports as website
  *  Uses the SQLite database for saving the weather records
  *  The Database will be written to config/archive/weewx.sdb  
     to have it persistent on the host
+ *  Prepared to use the BME280 Sensor 
+
 ---
 
 ## Usage:

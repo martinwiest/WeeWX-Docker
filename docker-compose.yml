@@ -7,7 +7,7 @@ services:
    ports:
     - "80:80"
    volumes:
-    - "./myconfig:/home/weewx/config:rw"
+    - "./config:/home/weewx/config:rw"
    devices: 
     - "/dev/bus/usb:/dev/bus/usb"
     - "/dev/i2c-1:/dev/i2c-1"  
