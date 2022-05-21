@@ -1,4 +1,4 @@
-FROM arm64v8/nginx
+FROM nginx
 LABEL maintainer="martinwiest"
 ENV WVERSION="weewx-4.8.0" 
 ENV WSOURCE="http://weewx.com/downloads/$WVERSION.tar.gz"
