@@ -105,6 +105,4 @@ userfiles
 ln -sf /usr/bin/python3 /usr/bin/python
 
 # start weewx
-#python3 /home/weewx/bin/weewxd -d -r --config=/home/weewx/weewx.conf
 /etc/init.d/weewx start
-
