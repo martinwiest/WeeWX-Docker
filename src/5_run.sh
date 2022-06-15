@@ -13,7 +13,7 @@ config="$workdir/weewx.conf"
 webconf="/etc/nginx/conf.d/default.conf"
 
 # start busybox syslog
-busybox syslogd
+busybox syslogd -O $configdir/Logs/weewx.log
 
 # Test if preconfigured configfile exists and copy it
 
